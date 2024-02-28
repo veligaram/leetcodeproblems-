@@ -5,17 +5,24 @@
 #         self.left = left
 #         self.right = right
 class Solution:
-    def findBottomLeftValue(self, root: Optional[TreeNode]) -> int:
-        queue=deque([root])
-        ans=[]
-        while queue:
-            curr=len(queue)
-            ans.append(queue[0].val)
-            for i in range(curr):
-                node=queue.popleft()
-                if node.left:
-                    queue.append(node.left)
+    def __init__(self):
+        self.res = [0] * 2
 
-                if node.right:
-                    queue.append(node.right)
-        return ans[-1]
+    def findBottomLeftValue(self, root: Optional[TreeNode]) -> int:
+        self.dfs(root, 1)
+        return self.res[1]
+
+    def dfs(self, node, depth):
+        if not node:
+            return
+
+        if depth > self.res[0]:
+            self.res[0] = depth
+            self.res[1] = node.val
+        
+        self.dfs(node.left, depth+1)
+        self.dfs(node.right, depth+1)
+    
+
+
+        
