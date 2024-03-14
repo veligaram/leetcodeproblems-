@@ -1,21 +1,18 @@
 class Solution:
     def numSubarraysWithSum(self, nums: List[int], goal: int) -> int:
-        i = count = res = 0
-        for j in range(len(nums)):
-            if nums[j] == 1:
-                goal -= 1
-                count = 0
-                      
-            while goal == 0 and i <= j:
-                goal += nums[i]
-                i += 1
-                count += 1
-                if i > j - goal + 1:
-                    break
-                    
-            while goal < 0:
-                goal += nums[i]
-                i += 1
-
-            res += count
-        return res
+        ones = [-1]
+        for i, x in enumerate(nums):
+            if x:
+                ones.append(i)
+        ones.append(len(nums))
+        l, r = 0, goal + 1
+        tot = 0
+        while r < len(ones):
+            if goal:
+                tot += (ones[l+1] - ones[l]) * (ones[r] - ones[r-1])
+            else:
+                zeroes = ones[r] - ones[l]
+                tot += zeroes * (zeroes - 1) // 2
+            l += 1
+            r += 1
+        return tot
