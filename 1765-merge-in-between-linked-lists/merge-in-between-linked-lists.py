@@ -5,27 +5,24 @@
 #         self.next = next
 class Solution:
     def mergeInBetween(self, list1: ListNode, a: int, b: int, list2: ListNode) -> ListNode:
-        curr=list1
-        t=0
-        var=None
-        while curr!=None:
-            t+=1
-            if t==b+1:
-                break
-            if a==t:
-                pp=curr.next
-                var=curr
-                var.next=list2
-                # curr.next=None
-                curr=pp
+        curr=list2
+        while curr.next:
             curr=curr.next
-        temp=list1
-        while temp!=None:
-            if temp.next==None:
-                break
-            temp=temp.next
-        temp.next=curr
-        return list1
+        list2_end=curr
+        curr=list1
+        n=0
+        while 1:
+            if n==a-1:
+                temp=curr
+                while 1:
+                    if n==b+1:
+                        temp.next=list2
+                        list2_end.next=curr
+                        return list1
+                    curr=curr.next    
+                    n+=1
+            curr=curr.next
+            n+=1
 
         
-                
+        
