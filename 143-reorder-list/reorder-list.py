@@ -1,48 +1,36 @@
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
 class Solution:
-    def reorderList(self, head: ListNode) -> None:
-        if not head or not head.next:
-            return
-
-        middle = self.midNode(head)
-        new_head = middle.next
-        middle.next = None
-
-        new_head = self.reverseLinkedList(new_head)
-
-        c1 = head
-        c2 = new_head
-        f1 = None
-        f2 = None
-
-        while c1 and c2:
-            # Backup
-            f1 = c1.next
-            f2 = c2.next
-
-            # Linking
-            c1.next = c2
-            c2.next = f1
-
-            # Move
-            c1 = f1
-            c2 = f2
-
-    def midNode(self, head: ListNode) -> ListNode:
-        slow = head
-        fast = head
-
-        while fast.next and fast.next.next:
+    def reorderList(self, head: Optional[ListNode]) -> None:
+        """
+        Do not return anything, modify head in-place instead.
+        """
+        res = ListNode(0)
+        res.next = head
+        slow = fast = res
+        while fast and fast.next:
             slow = slow.next
-            fast = fast.next.next
-        return slow
+            fast = fast.next.next 
+        fast = slow.next
+        slow.next = None
+        fast = self.reverseTwo(fast)
+        slow = res.next
+        while fast:
+            slowp, fastp = slow.next, fast.next
+            slow.next, fast.next = fast, slowp
+            slow, fast = slowp, fastp
+        return res.next
 
-    def reverseLinkedList(self, head: ListNode) -> ListNode:
+
+    def reverseTwo(self, node):
         prev = None
-        curr = head
-
+        curr = node
         while curr:
-            forw = curr.next
+            nextp = curr.next
             curr.next = prev
             prev = curr
-            curr = forw
+            curr = nextp
         return prev
