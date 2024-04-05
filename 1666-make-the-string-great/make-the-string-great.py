@@ -1,10 +1,13 @@
 class Solution:
     def makeGood(self, s: str) -> str:
-        n=len(s)
-        ans=[]
-        for c in s:
-            if ans and abs(ord(ans[-1])-ord(c))==32:
-                ans.pop()
+        stack = []
+        for char in s:
+            if stack:
+                if char.lower() == stack[-1].lower() and char != stack[-1]:
+                    stack.pop()
+                else:
+                    stack.append(char)
             else:
-                ans.append(c)
-        return "".join(ans)
+                stack.append(char)
+        return "".join(stack)
+        
