@@ -1,29 +1,29 @@
-class UnionFind:
-    def __init__(self, n):
-        self.parent = list(range(n))
-        self.rank = [0] * n
-
-    def union_by_rank(self, u, v):
-        i = self.find(u)
-        j = self.find(v)
-        if i == j:
-            return
-        if self.rank[i] < self.rank[j]:
-            self.parent[i] = j
-        elif self.rank[i] > self.rank[j]:
-            self.parent[j] = i
-        else:
-            self.parent[i] = j
-            self.rank[j] += 1
-
-    def find(self, u):
-        if self.parent[u] != u:
-            self.parent[u] = self.find(self.parent[u])
-        return self.parent[u]
-
+from collections import defaultdict
 class Solution:
     def validPath(self, n: int, edges: List[List[int]], source: int, destination: int) -> bool:
-        uf = UnionFind(n)
-        for u, v in edges:
-            uf.union_by_rank(u, v)
-        return uf.find(source) == uf.find(destination)
+        if [source, destination] in edges:
+            return True
+        if source == destination:
+            return True
+        if n <= 1:
+            return True
+
+        graph = defaultdict(list)
+        for x, y in edges:
+            graph[x].append(y)
+            graph[y].append(x)
+        
+        seen = {source}
+
+        def dfs(node):
+            if node == destination:
+                return True
+            seen.add(node)
+            for neighbour in graph[node]:
+                if neighbour not in seen:
+                    seen.add(neighbour)
+                    if dfs(neighbour):
+                        return True
+            return False
+        
+        return dfs(source)
