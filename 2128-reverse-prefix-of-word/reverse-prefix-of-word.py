@@ -1,10 +1,8 @@
 class Solution:
     def reversePrefix(self, word: str, ch: str) -> str:
-        x=0
-        for i in range(len(word)):
-            if word[x]==ch:
-                return word[x::-1]+word[x+1:]
-            x+=1
-        return word
-
-        
+        prefix = ''
+        for i, c in enumerate(word):
+            if c == ch:
+                return (prefix + c)[::-1] + word[i+1:]
+            prefix += c
+        return prefix
