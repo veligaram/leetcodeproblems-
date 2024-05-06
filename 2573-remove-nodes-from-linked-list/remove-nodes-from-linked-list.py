@@ -1,28 +1,38 @@
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
 class Solution:
     def removeNodes(self, head: Optional[ListNode]) -> Optional[ListNode]:
-        stack = []
-        current = head
+        dummy = head
+        rev = None
 
-        # Add nodes to the stack
-        while current:
-            stack.append(current)
-            current = current.next
+        # reverse the list and store in temp rev
+        while dummy:
+            next_node = dummy.next
+            dummy.next = rev
+            rev = dummy
+            dummy = next_node
 
-        current = stack.pop()
-        maximum = current.val
-        result_list = ListNode(maximum)
+        # iterate over reversed list
+        dummy = rev
+        head = None
+        max_value = float("-inf")
 
-        # Remove nodes from the stack and add to result
-        while stack:
-            current = stack.pop()
-            # Current should not be added to the result
-            if current.val < maximum:
-                continue
-            # Add new node with current's value to front of the result
+        # Create new list
+        while dummy:
+            if dummy.val >= max_value:
+                max_value = dummy.val
+
+                # same logic as for reversing
+                new_node = dummy.next
+                dummy.next = head
+                head = dummy
+                dummy = new_node
             else:
-                new_node = ListNode(current.val)
-                new_node.next = result_list
-                result_list = new_node
-                maximum = current.val
+                dummy = dummy.next
 
-        return result_list
+        return head
+
+        
