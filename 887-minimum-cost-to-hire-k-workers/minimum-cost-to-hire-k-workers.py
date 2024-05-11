@@ -1,23 +1,23 @@
-import heapq
 class Solution:
-    def mincostToHireWorkers(self, quality: List[int], wage: List[int], k: int) -> float:
-        n = len(wage)
-        workers = [(wage[i]/quality[i], quality[i]) for i in range(n)]
-        workers.sort()
-        total_quality = 0
-        ratio = 0
-        heap = []
-        heapq.heapify(heap)
+    def mincostToHireWorkers(
+        self, quality: List[int], wage: List[int], k: int
+    ) -> float:
+        ratio = sorted([(w / q, q) for w, q in zip(wage, quality)])
+        max_heap = []
+        quality_sum = 0
+        max_ratio = 0.0
+        
         for i in range(k):
-            ratio = workers[i][0]
-            total_quality += workers[i][1]
-            heapq.heappush(heap, -workers[i][1])
-        res = ratio*total_quality
-        for i in range(k, n):
-            ratio = workers[i][0]
-            total_quality += workers[i][1]
-            heapq.heappush(heap, -workers[i][1])
-            quality = -heapq.heappop(heap)
-            total_quality -= quality
-            res = min(res, ratio*total_quality)
+            max_ratio = max(max_ratio, ratio[i][0])
+            quality_sum += ratio[i][1]
+            heapq.heappush(max_heap, -ratio[i][1])
+        
+        res = max_ratio * quality_sum
+        
+        for i in range(k, len(quality)):
+            max_ratio = max(max_ratio, ratio[i][0])
+            quality_sum += ratio[i][1] + heapq.heappop(max_heap)
+            heapq.heappush(max_heap, -ratio[i][1])
+            res = min(res, max_ratio * quality_sum)
+        
         return res
