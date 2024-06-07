@@ -1,16 +1,32 @@
 class Solution:
-    def replaceWords(self, dict: List[str], sentence: str) -> str:
-        roots = set(dict)
-        words = sentence.split()
-        result = []
+    def replaceWords(self, dictionary: List[str], sentence: str) -> str:
+        trie = {}
+        for word in dictionary:
+            node = trie
+            for letter in word:
+                if letter in node:
+                    node = node[letter]
+                else:
+                    new_node = {}
+                    node[letter] = new_node
+                    node = new_node
+            else:
+                node["is_word"] = True
 
-        for word in words:
-            for i in range(len(word) + 1):
-                prefix = word[:i]
-                if prefix in roots:
-                    result.append(prefix)
+        words = []
+        for word in sentence.split(" "):
+            node = trie
+            for idx, letter in enumerate(word):
+                if letter in node:
+                    node = node[letter]
+                    if node.get("is_word"):
+                        words.append(word[:idx+1])
+                        break
+                else:
+                    words.append(word)
                     break
             else:
-                result.append(word)
-
-        return ' '.join(result)
+                words.append(word)
+        
+        return " ".join(words)
+        
